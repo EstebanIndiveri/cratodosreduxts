@@ -1,12 +1,20 @@
-// Standard interface and functions
-import { ActionTypes, ADD_TODO, DELETE_TODO, SET_NEWTODO, SET_TODOS, TOGGLE_TODO, UPDATE_TODO } from './actions';
-import {Store, Todo} from './types'
+import { createStore } from "redux";
+import {
+  ActionTypes,
+  ADD_TODO,
+  DELETE_TODO,
+  SET_NEWTODO,
+  SET_TODOS,
+  TOGGLE_TODO,
+  UPDATE_TODO,
+} from "./actions";
+import { Store, Todo } from "./types";
 export const updateTodo = (todos: Todo[], id: number, text: string): Todo[] =>
   todos.map((todo) => ({
     ...todo,
     text: todo.id === id ? text : todo.text,
   }));
-
+// Standard interface and functions
 export const toggleTodo = (todos: Todo[], id: number): Todo[] =>
   todos.map((todo) => ({
     ...todo,
@@ -26,42 +34,49 @@ export const addTodo = (todos: Todo[], text: string): Todo[] => [
 ];
 
 //implementation
-function todoReducer(state:Store={
-  todos:[],
-  newTodo:'',
-},action:ActionTypes){
-  switch(action.type){
+function todoReducer(
+  state: Store = {
+    todos: [],
+    newTodo: "",
+  },
+  action: ActionTypes
+) {
+  switch (action.type) {
     case SET_TODOS:
-      return{
+      return {
         ...state,
-        todos:action.payload,
-      }
+        todos: action.payload,
+      };
     case SET_NEWTODO:
-      return{
+      return {
         ...state,
-        newTodo:action.payload
-      }
+        newTodo: action.payload,
+      };
     case UPDATE_TODO:
-      return{
+      return {
         ...state,
-        todos:updateTodo(state.todos,action.payload.id,action.payload.text),
-      }
+        todos: updateTodo(state.todos, action.payload.id, action.payload.text),
+      };
     case TOGGLE_TODO:
-      return{
+      return {
         ...state,
-        todo:toggleTodo(state.todos,action.payload),
-      }
+        todo: toggleTodo(state.todos, action.payload),
+      };
     case DELETE_TODO:
-      return{
+      return {
         ...state,
-        todos:removeTodo(state.todos,action.payload),
+        todos: removeTodo(state.todos, action.payload),
       };
     case ADD_TODO:
-      return{
+      return {
         ...state,
-        newTodo:'',
-        todos:addTodo(state.todos,state.newTodo),
-      }
-    default:return state;
+        newTodo: "",
+        todos: addTodo(state.todos, state.newTodo),
+      };
+    default:
+      return state;
   }
 }
+
+const store=createStore(todoReducer);
+export default store;
